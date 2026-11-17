@@ -1,0 +1,36 @@
+{
+  "genres": [
+    {"name": "Ролевая игра", "slug": "rpg"},
+    {"name": "Экшен", "slug": "action"},
+    {"name": "Стратегия", "slug": "strategy"},
+    {"name": "Шутер", "slug": "shooter"},
+    {"name": "Приключение", "slug": "adventure"},
+    {"name": "Инди", "slug": "indie"},
+    {"name": "Симулятор", "slug": "simulation"},
+    {"name": "Платформер", "slug": "platformer"}
+  ],
+  "platforms": [
+    {"name": "ПК", "slug": "pc"},
+    {"name": "PlayStation 5", "slug": "ps5"},
+    {"name": "Xbox Series X|S", "slug": "xbox-series"},
+    {"name": "Nintendo Switch", "slug": "switch"}
+  ],
+  "games": [
+    {"title": "The Witcher 3: Wild Hunt", "developer": "CD Projekt Red", "release_year": 2015, "genres": ["rpg", "action"], "platforms": ["pc", "ps5", "xbox-series", "switch"]},
+    {"title": "Cyberpunk 2077", "developer": "CD Projekt Red", "release_year": 2020, "genres": ["rpg", "action"], "platforms": ["pc", "ps5", "xbox-series"]},
+    {"title": "Elden Ring", "developer": "FromSoftware", "release_year": 2022, "genres": ["rpg", "action"], "platforms": ["pc", "ps5", "xbox-series"]},
+    {"title": "Baldur's Gate 3", "developer": "Larian Studios", "release_year": 2023, "genres": ["rpg", "strategy"], "platforms": ["pc", "ps5", "xbox-series"]},
+    {"title": "Hades", "developer": "Supergiant Games", "release_year": 2020, "genres": ["action", "indie"], "platforms": ["pc", "ps5", "xbox-series", "switch"]},
+    {"title": "Hollow Knight", "developer": "Team Cherry", "release_year": 2017, "genres": ["platformer", "indie", "action"], "platforms": ["pc", "ps5", "xbox-series", "switch"]},
+    {"title": "Stardew Valley", "developer": "ConcernedApe", "release_year": 2016, "genres": ["simulation", "indie"], "platforms": ["pc", "ps5", "xbox-series", "switch"]},
+    {"title": "Civilization VI", "developer": "Firaxis Games", "release_year": 2016, "genres": ["strategy"], "platforms": ["pc", "switch"]},
+    {"title": "Counter-Strike 2", "developer": "Valve", "release_year": 2023, "genres": ["shooter"], "platforms": ["pc"]},
+    {"title": "Doom Eternal", "developer": "id Software", "release_year": 2020, "genres": ["shooter", "action"], "platforms": ["pc", "ps5", "xbox-series", "switch"]},
+    {"title": "Disco Elysium", "developer": "ZA/UM", "release_year": 2019, "genres": ["rpg", "adventure"], "platforms": ["pc", "ps5", "xbox-series", "switch"]},
+    {"title": "Celeste", "developer": "Maddy Makes Games", "release_year": 2018, "genres": ["platformer", "indie"], "platforms": ["pc", "switch"]},
+    {"title": "Red Dead Redemption 2", "developer": "Rockstar Games", "release_year": 2018, "genres": ["action", "adventure"], "platforms": ["pc"]},
+    {"title": "Portal 2", "developer": "Valve", "release_year": 2011, "genres": ["adventure"], "platforms": ["pc"]},
+    {"title": "Factorio", "developer": "Wube Software", "release_year": 2020, "genres": ["strategy", "simulation", "indie"], "platforms": ["pc", "switch"]},
+    {"title": "The Legend of Zelda: Tears of the Kingdom", "developer": "Nintendo", "release_year": 2023, "genres": ["adventure", "action"], "platforms": ["switch"]}
+  ]
+}

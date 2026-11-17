@@ -1,0 +1,6 @@
+# Локальный запуск на Windows без PostgreSQL (SQLite)
+Django>=5.1,<6
+djangorestframework>=3.15
+djoser>=2.3
+django-filter>=24
+Pillow>=11

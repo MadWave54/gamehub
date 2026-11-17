@@ -1,0 +1,84 @@
+name: GameHub CI/CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: gamehub
+          POSTGRES_PASSWORD: gamehub
+          POSTGRES_DB: gamehub
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Установка зависимостей
+        run: |
+          pip install flake8
+          pip install -r backend/requirements.txt
+      - name: Линтер и тесты
+        env:
+          POSTGRES_USER: gamehub
+          POSTGRES_PASSWORD: gamehub
+          POSTGRES_DB: gamehub
+          DB_HOST: 127.0.0.1
+        run: |
+          flake8 backend --exclude migrations --max-line-length 100
+          cd backend && python manage.py test api
+
+  build_and_push:
+    needs: tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - context: ./backend
+            image: gamehub_backend
+          - context: ./infra
+            image: gamehub_gateway
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ matrix.image }}:latest
+
+  deploy:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Копирование compose-файла на сервер
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: infra/docker-compose.production.yml,data/games.json
+          target: gamehub
+      - name: Перезапуск контейнеров
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd gamehub
+            sudo docker compose -f infra/docker-compose.production.yml pull
+            sudo docker compose -f infra/docker-compose.production.yml down
+            sudo docker compose -f infra/docker-compose.production.yml up -d

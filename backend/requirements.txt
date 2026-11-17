@@ -1,0 +1,7 @@
+Django==5.1.15
+djangorestframework==3.17.2
+djoser==2.3.5
+django-filter==25.1
+psycopg2-binary==2.9.13
+Pillow==12.3.0
+gunicorn==27.0.1
