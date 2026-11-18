@@ -1,0 +1,852 @@
+{
+  "info": {
+    "name": "GameHub — итоговая проверка API",
+    "_postman_id": "12346a0f-bb66-4457-9040-a17062f8ba19",
+    "description": "Коллекция для проверки авторизации, прав доступа, CRUD обзоров, предметной валидации, подписок, комментариев, избранного и списка желаемого. Перед запуском задайте base_url и учётные данные в окружении.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8003"
+    },
+    {
+      "key": "email_a",
+      "value": "postman_a@example.com"
+    },
+    {
+      "key": "username_a",
+      "value": "postman_a"
+    },
+    {
+      "key": "password_a",
+      "value": "StrongPass123"
+    },
+    {
+      "key": "email_b",
+      "value": "postman_b@example.com"
+    },
+    {
+      "key": "username_b",
+      "value": "postman_b"
+    },
+    {
+      "key": "password_b",
+      "value": "StrongPass123"
+    },
+    {
+      "key": "token_a",
+      "value": ""
+    },
+    {
+      "key": "token_b",
+      "value": ""
+    },
+    {
+      "key": "user_a_id",
+      "value": ""
+    },
+    {
+      "key": "user_b_id",
+      "value": ""
+    },
+    {
+      "key": "game_id",
+      "value": ""
+    },
+    {
+      "key": "wrong_platform_game_id",
+      "value": ""
+    },
+    {
+      "key": "pc_platform_id",
+      "value": ""
+    },
+    {
+      "key": "post_id",
+      "value": ""
+    },
+    {
+      "key": "comment_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Регистрация и вход",
+      "item": [
+        {
+          "name": "Регистрация пользователя A",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email_a}}\",\n  \"username\": \"{{username_a}}\",\n  \"first_name\": \"Postman\",\n  \"last_name\": \"Tester A\",\n  \"password\": \"{{password_a}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) pm.collectionVariables.set('user_a_id', pm.response.json().id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Регистрация пользователя B",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email_b}}\",\n  \"username\": \"{{username_b}}\",\n  \"first_name\": \"Postman\",\n  \"last_name\": \"Tester B\",\n  \"password\": \"{{password_b}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) pm.collectionVariables.set('user_b_id', pm.response.json().id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Вход пользователя A",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email_a}}\",\n  \"password\": \"{{password_a}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/token/login/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "token",
+                "login",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.expect(j.auth_token).to.be.a('string').and.not.empty;",
+                  "pm.collectionVariables.set('token_a', j.auth_token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Вход пользователя B",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email_b}}\",\n  \"password\": \"{{password_b}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/token/login/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "token",
+                "login",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.expect(j.auth_token).to.be.a('string').and.not.empty;",
+                  "pm.collectionVariables.set('token_b', j.auth_token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Авторизация и права",
+      "item": [
+        {
+          "name": "Публичный каталог без токена",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/games/?limit=100",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "games",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "100"
+                }
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const list=pm.response.json().results; const game=list.find(x=>x.title==='Hades'); const zelda=list.find(x=>x.title.startsWith('The Legend of Zelda')); pm.expect(game).to.exist; pm.expect(zelda).to.exist; pm.collectionVariables.set('game_id',game.id); pm.collectionVariables.set('wrong_platform_game_id',zelda.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Получить платформы и сохранить PC",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/platforms/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "platforms",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const r=pm.response.json(); const list=r.results || r; const pc=list.find(x=>x.slug==='pc') || list[0]; pm.expect(pc).to.exist; pm.collectionVariables.set('pc_platform_id', pc.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Защищённый профиль без токена",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/me/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('401 Unauthorized', () => pm.response.to.have.status(401));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Создание обзора без токена",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"game\":{{game_id}},\"title\":\"Postman API test\",\"text\":\"Проверка обзора\",\"image\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAFElEQVR4nGM0StnCgA0wYRUdtBIABdEBWgp/dJ8AAAAASUVORK5CYII=\",\"rating\":9,\"hours_played\":10,\"platforms\":[{{pc_platform_id}}]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/posts/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "posts",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('401 Unauthorized', () => pm.response.to.have.status(401));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Обзоры и предметная валидация",
+      "item": [
+        {
+          "name": "Создать обзор пользователем A",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token_a}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"game\":{{game_id}},\"title\":\"Postman API test\",\"text\":\"Проверка обзора\",\"image\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAFElEQVR4nGM0StnCgA0wYRUdtBIABdEBWgp/dJ8AAAAASUVORK5CYII=\",\"rating\":9,\"hours_played\":10,\"platforms\":[{{pc_platform_id}}]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/posts/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "posts",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));",
+                  "if(pm.response.code===201) pm.collectionVariables.set('post_id',pm.response.json().id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Изменение чужого обзора пользователем B",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token_b}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"rating\":1}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/posts/{{post_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "posts",
+                "{{post_id}}",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('403 Forbidden', () => pm.response.to.have.status(403));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Недопустимая оценка",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token_a}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"game\":{{game_id}},\"title\":\"Postman API test\",\"text\":\"Проверка обзора\",\"image\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAFElEQVR4nGM0StnCgA0wYRUdtBIABdEBWgp/dJ8AAAAASUVORK5CYII=\",\"rating\":11,\"hours_played\":10,\"platforms\":[{{pc_platform_id}}]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/posts/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "posts",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('400 Bad Request', () => pm.response.to.have.status(400));",
+                  "pm.test('Ошибка именно rating',()=>pm.expect(pm.response.json()).to.have.property('rating'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Игра не выходила на PC — 400",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token_a}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"game\":{{wrong_platform_game_id}},\"title\":\"Postman API test\",\"text\":\"Проверка обзора\",\"image\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAFElEQVR4nGM0StnCgA0wYRUdtBIABdEBWgp/dJ8AAAAASUVORK5CYII=\",\"rating\":9,\"hours_played\":10,\"platforms\":[{{pc_platform_id}}]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/posts/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "posts",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('400 Bad Request',()=>pm.response.to.have.status(400));",
+                  "pm.test('Ошибка platforms',()=>pm.expect(pm.response.json()).to.have.property('platforms'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4. Подписки, комментарии и списки",
+      "item": [
+        {
+          "name": "Подписаться на пользователя A",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{token_b}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_a_id}}/subscribe/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{user_a_id}}",
+                "subscribe",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Лента пользователя B",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{token_b}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/posts/feed/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "posts",
+                "feed",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Добавить обзор в избранное",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{token_b}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/posts/{{post_id}}/favorite/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "posts",
+                "{{post_id}}",
+                "favorite",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Комментарий к обзору",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token_b}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"text\":\"Проверка комментария через Postman\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/posts/{{post_id}}/comments/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "posts",
+                "{{post_id}}",
+                "comments",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));",
+                  "if(pm.response.code===201) pm.collectionVariables.set('comment_id',pm.response.json().id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Добавить игру в список желаемого",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{token_b}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/games/{{game_id}}/wishlist/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "games",
+                "{{game_id}}",
+                "wishlist",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Скачать список желаемого",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{token_b}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/games/download_wishlist/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "games",
+                "download_wishlist",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.test('text/plain', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('text/plain')); "
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (pm.info.requestName === 'Регистрация пользователя A') { const suffix=Date.now().toString(); pm.collectionVariables.set('email_a','pm_a_'+suffix+'@example.com'); pm.collectionVariables.set('username_a','pm_a_'+suffix); pm.collectionVariables.set('email_b','pm_b_'+suffix+'@example.com'); pm.collectionVariables.set('username_b','pm_b_'+suffix); }"
+        ]
+      }
+    }
+  ]
+}

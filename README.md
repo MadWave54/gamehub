@@ -23,10 +23,19 @@ infra/     docker-compose.yml, docker-compose.production.yml, nginx.conf
 ```bash
 cp .env.example .env        # задать пароли и SECRET_KEY
 cd infra
-docker compose up --build
-docker compose exec backend python manage.py createsuperuser
+docker compose --project-name gamehub up -d --build
+docker compose --project-name gamehub exec backend python manage.py createsuperuser
 ```
-API: http://localhost:8000/api/, админка: http://localhost:8000/admin/
+API: http://localhost:8003/api/, админка: http://localhost:8003/admin/.
+Порт задаётся `GAMEHUB_PORT` в `.env` (по умолчанию 8003).
+
+Проверенный стенд: PostgreSQL 16, Gunicorn (3 процесса), Nginx.
+Проверка внутри контейнера: `docker compose --project-name gamehub exec backend python manage.py test api --noinput` — 5 тестов пройдены.
+Коллекция `demo/GameHub_Postman.json`: 18 запросов, 21 проверка без ошибок.
+Повторный запуск: `npx newman run demo/GameHub_Postman.json` из корня проекта.
+Коллекция автоматически создаёт уникальные учётные записи; токены получает при входе.
+В графическом Postman дополнительно проверены создание обзора (201) и изменение чужого обзора (403).
+Отчёты текущего прогона находятся в `demo/`. Конфигурация GitHub Actions подготовлена; её выполнение и удалённый деплой не подтверждены.
 
 ## Локальный запуск без Docker
 ```bash

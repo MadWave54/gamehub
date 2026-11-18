@@ -1,5 +1,6 @@
 import base64
 import io
+from pathlib import Path
 
 from django.core.management import call_command
 from PIL import Image
@@ -19,7 +20,10 @@ def tiny_png():
 class GameHubApiTests(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        call_command('load_data', path='../data/games.json', verbosity=0)
+        data_dir = Path(__file__).resolve().parents[1] / 'data'
+        if not data_dir.exists():
+            data_dir = Path(__file__).resolve().parents[2] / 'data'
+        call_command('load_data', path=str(data_dir / 'games.json'), verbosity=0)
         cls.author = User.objects.create_user(
             email='author@example.com', username='author', password='StrongPass123',
             first_name='Анна', last_name='Автор',
